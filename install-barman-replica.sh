@@ -27,7 +27,7 @@ echo -e "\nInstalling Barman..."
 sudo su root -c "echo barman:$BARMAN_USERPASS | chpasswd"
 
 echo -e "\nYou can connect to this machine with user:barman password:$BARMAN_USERPASS"
-echo -e "\nPlease switch to PostgreSQL machine and copy ssh keys to here."
+echo -e "\nPlease switch to PostgreSQL machine and proceed with copying ssh keys."
 while true; do
     read -p "Do you want to continue (y/n)?" yn
     case $yn in
