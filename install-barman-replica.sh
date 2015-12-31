@@ -18,14 +18,16 @@ sudo apt-get install pip
 sudo pip install barman
 sudo apt-get install sshpass
 
+sudo su root -c "echo barman:$BARMAN_USERPASS | chpasswd"
+
+
 echo -e "\nGenerating ssh keys and sending to $PG_IP computer..."
-sudo su barman -c "ssh-keygen -t rsa -N ''"
+sudo su barman -c "ssh-keygen -f /var/lib/barman/.ssh/id_rsa -t rsa -N ''"
 
 echo -e "\nTo add generated ssh fingerprint to backup server,"
-read -e -p "Please enter password of postgres system user at $PG_IP : " PG_USERPASS
-sudo su barman -c "sshpass -p '$PG_USERPASS' ssh-copy-id -i /var/lib/barman/.ssh/id_rsa.pub postgres@$PG_IP"
+read -e -p "Please enter SSH password of postgres system user at $PG_IP : " PG_USERPASS
 
-sudo su root -c "echo barman:$BARMAN_USERPASS | chpasswd"
+sudo su barman -c "sshpass -p '$PG_USERPASS' ssh-copy-id -i /var/lib/barman/.ssh/id_rsa.pub postgres@$PG_IP"
 
 echo -e "\nPlease switch to PostgreSQL machine and proceed with copying ssh keys to this machine."
 echo -e "\nYou can connect to this machine with SSH user:barman password:$BARMAN_USERPASS"
@@ -99,7 +101,7 @@ echo ';' >> $BAR_CONFIG
 echo '; Global bandwidth limit in KBPS - default 0 (meaning no limit)' >> $BAR_CONFIG
 echo 'bandwidth_limit = 1000' >> $BAR_CONFIG
 echo ';' >> $BAR_CONFIG
-echo '; Immediate checkpoint for backup command - default false' >> ~$BAR_CONFIG
+echo '; Immediate checkpoint for backup command - default false' >> $BAR_CONFIG
 echo ';immediate_checkpoint = false' >> $BAR_CONFIG
 echo ';' >> $BAR_CONFIG
 echo '; Enable network compression for data transfers - default false' >> $BAR_CONFIG
@@ -154,13 +156,8 @@ echo 'wal_retention_policy = main' >> $BAR_CONFIG
 
 sudo chmod 644 $BAR_CONFIG
 
-
-echo -e "---- Try to connect PostgreSQL DB ----"
-psql -c 'SELECT version()' -U postgres -h $PG_IP
-
-
 while true; do
-    read -p "Would you like to try PostgreSQL DB connection now (y/n)?" yn
+    read -p "Would you like to test PostgreSQL DB connection now (y/n)?" yn
     case $yn in
         [Yy]* )  echo -e "---- Try to connect PostgreSQL DB ----"
 	echo -e "barman user should be able to connect postgres@$PG_IP with saved password"
@@ -176,7 +173,7 @@ echo -e "\nPlease make a ssh test if it is working now with command: ssh postgre
 while true; do
     read -p "Would you like to make the ssh test now (you will need to exit from ssh shell with exit command to proceed) (y/n)?" yn
     case $yn in
-        [Yy]* )  sudo su postgres -c "ssh postgres@$PG_IP"
+        [Yy]* )  sudo su barman -c "ssh postgres@$PG_IP"
         break;;
         [Nn]* ) break;;
         * ) echo "Please answer yes or no.";;
