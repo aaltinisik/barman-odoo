@@ -119,7 +119,7 @@ sudo su root -c "echo '; Time frame that must contain the latest backup date.' >
 sudo su root -c "echo '; If the latest backup is older than the time frame, barman check' >> $BAR_CONFIG"
 sudo su root -c "echo '; command will report an error to the user.' >> $BAR_CONFIG"
 sudo su root -c "echo '; If empty, the latest backup is always considered valid.' >> $BAR_CONFIG"
-sudo su root -c "echo '; Syntax for this option is: "i (DAYS | WEEKS | MONTHS)" where i is an' >> $BAR_CONFIG"
+sudo su root -c "echo '; Syntax for this option is: \"i (DAYS | WEEKS | MONTHS)\" where i is an' >> $BAR_CONFIG"
 sudo su root -c "echo '; integer > 0 which identifies the number of days | weeks | months of' >> $BAR_CONFIG"
 sudo su root -c "echo '; validity of the latest backup for this check. Also known as smelly backup.' >> $BAR_CONFIG"
 sudo su root -c "echo ';last_backup_maximum_age =' >> $BAR_CONFIG"
@@ -127,7 +127,7 @@ sudo su root -c "echo ';' >> $BAR_CONFIG"
 sudo su root -c "echo ';; ; main PostgreSQL Server configuration' >> $BAR_CONFIG"
 sudo su root -c "echo '[main]' >> $BAR_CONFIG"
 sudo su root -c "echo ';; ; Human readable description' >> $BAR_CONFIG"
-sudo su root -c "echo 'description =  "Main PostgreSQL Database"' >> $BAR_CONFIG"
+sudo su root -c "echo 'description =  \"Main PostgreSQL Database\"' >> $BAR_CONFIG"
 sudo su root -c "echo ';;' >> $BAR_CONFIG"
 sudo su root -c "echo ';; ; SSH options' >> $BAR_CONFIG"
 sudo su root -c "echo 'ssh_command = ssh postgres@$PG_IP' >> $BAR_CONFIG"
@@ -177,15 +177,13 @@ while true; do
         * ) echo "Please answer yes or no.";;
     esac
 done
-
 while true; do
-    read -p "Would you like to restart this server server now (y/n)?" yn
+    read -p "Would you like to test barman with \"barman check main\" command? (all results needs to be OK) (y/n)?" yn
     case $yn in
-        [Yy]* ) sudo reboot
+        [Yy]* ) sudo su barman -c "barman check main"
         break;;
         [Nn]* ) break;;
         * ) echo "Please answer yes or no.";;
     esac
 done
-
-
+echo -e "\nAll Done. Please remenber to add barman to cron for periodical backups."
