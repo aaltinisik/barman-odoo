@@ -48,10 +48,8 @@ sudo su barman -c "chmod 600 /var/lib/barman/.pgpass"
 
 sudo rm $BAR_CONFIG
 sudo touch $BAR_CONFIG
-sudo chmod 777 $BAR_CONFIG
 
-echo '#!/bin/sh' >> $BAR_CONFIG
-
+sudo su root -c "echo '#!/bin/sh' >> $BAR_CONFIG"
 echo '; Barman, Backup and Recovery Manager for PostgreSQL' >> $BAR_CONFIG
 echo '; http://www.pgbarman.org/ - http://www.2ndQuadrant.com/' >> $BAR_CONFIG
 echo ';' >> $BAR_CONFIG
@@ -86,7 +84,7 @@ echo '; Pre/post archive hook scripts' >> $BAR_CONFIG
 echo ';pre_archive_script = env | grep ^BARMAN' >> $BAR_CONFIG
 echo ';pre_archive_retry_script = env | grep ^BARMAN' >> $BAR_CONFIG
 echo ';post_archive_retry_script = env | grep ^BARMAN' >> $BAR_CONFIG
-echo 'post_archive_script = env | grep ^BARMAN' >> $BAR_CONFIG
+echo ';post_archive_script = env | grep ^BARMAN' >> $BAR_CONFIG
 echo ';' >> $BAR_CONFIG
 echo '; Directory of configuration files. Place your sections in separate files with .conf extension' >> $BAR_CONFIG
 echo '; For example place the main server section in /etc/barman.d/main.conf' >> $BAR_CONFIG
@@ -135,7 +133,7 @@ echo ';; ; SSH options' >> $BAR_CONFIG
 echo 'ssh_command = ssh postgres@$PG_IP' >> $BAR_CONFIG
 echo ';;' >> $BAR_CONFIG
 echo ';; ; PostgreSQL connection string' >> $BAR_CONFIG
-echo 'conninfo = host=$PG_IP user=postgres' >> $BAR_CONFIG
+sudo su root -c "echo 'conninfo = host=$PG_IP user=postgres' >> $BAR_CONFIG"
 echo ';;' >> $BAR_CONFIG
 echo ';; ; PostgreSQL streaming connection string' >> $BAR_CONFIG
 echo ';;streaming_conninfo = host=pg user=postgres' >> $BAR_CONFIG
