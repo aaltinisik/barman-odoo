@@ -24,8 +24,6 @@ sudo su root -c "echo 'archive_mode = on' >> $PGCONF"
 ARCHIVE_COMMAND="archive_command = \'rsync -a %p barman@$BACKUP_IP:/var/lib/barman/main/incoming/%f\'"
 sudo su root -c "echo $ARCHIVE_COMMAND >> $PGCONF"
 
-sudo su postgres -c "rm /var/lib/postgres/.ssh/authorized_keys"
-
 echo -e "\nPlease move to the barman backup machine and run install script give credentials below"
 echo -e "\npostgres db user pass :$POSTGRES_DBPASS"
 echo -e "\npostgres ssh system user pass :$PG_USERPASS"
@@ -34,7 +32,7 @@ while true; do
     read -p "Is backup machine ready for ssh connection, proceed (y/n)?" yn
     case $yn in
         [Yy]* ) sudo su postgres -c "ssh-keygen -t rsa -N ''"
-        read -e -p "Enter barman user ssh password at backup server $BACKUP_IP: " BARMAN_PASS
+        read -e -p "Enter barman user SSH password at backup server to copy ssh keys $BACKUP_IP: " BARMAN_PASS
         sudo su postgres -c "sshpass -p '$BARMAN_PASS' ssh-copy-id -i /var/lib/postgresql/.ssh/id_rsa.pub barman@$BACKUP_IP"
         break;;
         [Nn]* ) exit
