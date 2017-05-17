@@ -2,8 +2,8 @@
 # -*- encoding: utf-8 -*-
 
 # this script installs barman on source database computer 10.1.1.15 and backup is 10.1.1.11
-PGCONF=/etc/postgresql/9.3/main/postgresql.conf
-PGHBA=/etc/postgresql/9.3/main/pg_hba.conf
+PGCONF=/etc/postgresql/9.6/main/postgresql.conf
+PGHBA=/etc/postgresql/9.6/main/pg_hba.conf
 
 sudo apt-get install sshpass
 
