@@ -1,6 +1,7 @@
 #!/bin/bash
 # -*- encoding: utf-8 -*-
-
+# script updated for ubuntu 16.04
+# use pass with alphanumeric chars
 # this script installs barman on database backup server
 BAR_CONFIG="/etc/barman.conf"
 
@@ -14,8 +15,7 @@ echo -e "\n"
 echo -e "\nInstalling Barman..."
 sudo apt-get update
 sudo apt-get upgrade -y
-sudo apt-get install pip
-sudo pip install barman
+sudo apt-get install barman
 sudo apt-get install sshpass
 
 sudo su root -c "echo barman:$BARMAN_USERPASS | chpasswd"
